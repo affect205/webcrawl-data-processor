@@ -1,0 +1,63 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.7.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'org.alexside'
+version = '0.0.1-SNAPSHOT'
+archivesBaseName = 'webcrawl-data-processor'
+sourceCompatibility = '11'
+
+bootJar {
+	mainClassName = 'org.alexside.webcrawl.processor.Application'
+	launchScript()
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "Hoxton.SR9")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.amazonaws:aws-java-sdk:1.11.923'
+	implementation 'org.jooq:jool-java-8:0.9.13'
+	implementation 'org.hibernate:hibernate-validator:6.1.5.Final'
+	implementation 'com.rainerhahnekamp:sneakythrow:1.2.0'
+	implementation 'org.netpreserve:jwarc:0.13.0'
+
+	compileOnly 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+configurations.all {
+	exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}

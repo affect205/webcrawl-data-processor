@@ -1,0 +1,36 @@
+webcrawl:
+  async:
+    pool-size: 12
+    queue-size: 200
+    timeout: 3600000
+  loader:
+    type: "S3WebcrawlLoaderImpl"
+    aws:
+      access-key-id:
+      secret-access-key:
+      s3-bucket:
+      s3-region: "us-east-1"
+    store:
+      type: "LocalFileWebcrawlStoreImpl"
+      data-dir: ${LOADER_DATA_DIR:workdir}/s3
+  processor:
+    type: "JWarcWebcrawlProcessorImpl"
+spring:
+  profiles:
+    active: development
+  servlet:
+    multipart:
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+server:
+  port: 8094
+  connection-timeout: 180000
+  error:
+    include-message: always
+    include-stacktrace: never
+logging:
+  level:
+    org.alexside.webcrawl: DEBUG
+    org.springframework: INFO
+    org.apache.spark: WARN
+    org.hibernate: ERROR
